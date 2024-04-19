@@ -62,7 +62,7 @@ pipeline {
             steps {
                 echo 'Starting Tomcat'
                 ansiblePlaybook(
-                    playbook: '05.restart',
+                    playbook: '05.restart.yml',
                     inventory: 'hosts.ini'
                 )
             }
