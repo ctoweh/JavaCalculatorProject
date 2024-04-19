@@ -44,8 +44,9 @@
       ansible.builtin.copy:
         src: "/tmp/{{ item.path | basename }}"
         dest: "/opt/tomcat/webapps/"
-      with_items: "{{ warfile.files }}"  # Corrected variable name
+      with_items: "{{ warfile.files }}"
       become: yes
+
 
     - name: Remove existing .war files from ansible master
       ansible.builtin.shell:
