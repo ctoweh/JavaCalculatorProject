@@ -1,8 +1,4 @@
 ---
-
-- name: install httpd server 
-  become: yes
-
   tasks:
     - name: Install HTTPD
       dnf:
