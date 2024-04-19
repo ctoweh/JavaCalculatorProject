@@ -1,50 +1,49 @@
 ---
-### this is Nexus
-  name: Install Nexus
-  hosts: n4
-  vars:
-    nexus_version: "2.14.18"
-  tasks:
-    - name: Download Nexus
-      ansible.builtin.get_url:
-        url: "https://download.sonatype.com/nexus/{{ nexus_version }}/latest-unix.tar.gz"
-        dest: "/tmp/nexus.tar.gz"
+### nexus intall
+# this is nexus
 
-    - name: Extract Nexus archive
-      ansible.builtin.unarchive:
-        src: "/tmp/nexus.tar.gz"
-        dest: "/opt/"
-        remote_src: yes
-        creates: "/opt/nexus-{{ nexus_version }}"
+name: install nexus
+hosts: n4
+tasks:
+  - name: Download Nexus
+    ansible.builtin.get_url:
+      url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
+      dest: "/tmp/nexus.tar.gz"
 
-    - name: Create a symbolic link
-      ansible.builtin.file:
-        src: "/opt/nexus-{{ nexus_version }}"
-        dest: "/opt/nexus"
-        state: link
+  - name: Extract Nexus archive
+    ansible.builtin.unarchive:
+      src: "/tmp/nexus.tar.gz"
+      dest: "/opt/"
+      remote_src: yes
+      creates: "/opt/nexus-{{ nexus_version }}"
 
-    - name: Configure Nexus service
-      ansible.builtin.template:
-        src: nexus.service.j2
-        dest: "/etc/systemd/system/nexus.service"
-      notify:
-        - Reload systemd
+  - name: Create a symbolic link
+    ansible.builtin.file:
+      src: "/opt/nexus-{{ nexus_version }}"
+      dest: "/opt/nexus"
+      state: link
 
-    - name: Start Nexus service
-      ansible.builtin.service:
-        name: nexus
-        state: started
-      notify:
-        - Enable Nexus service
+  - name: Configure Nexus service
+    ansible.builtin.template:
+      src: nexus.service.j2
+      dest: "/etc/systemd/system/nexus.service"
+    notify:
+      - Reload systemd
 
-  handlers:
-    - name: Reload systemd
-      ansible.builtin.systemd:
-        daemon_reload: yes
-        state: reloaded
+  - name: Start Nexus service
+    ansible.builtin.service:
+      name: nexus
+      state: started
+    notify:
+      - Enable Nexus service
 
-    - name: Enable Nexus service
-      ansible.builtin.service:
-        name: nexus
-        enabled: yes
+handlers:
+  - name: Reload systemd
+    ansible.builtin.systemd:
+      daemon_reload: yes
+      state: reloaded
 
+  - name: Enable Nexus service
+    ansible.builtin.service:
+      name: nexus
+      enabled: yes
