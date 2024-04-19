@@ -1,0 +1,8 @@
+    
+    - name: Get Java home directory
+      command: "which java"
+      register: java_home
+
+    - name: Display Java home directory
+      debug:
+        var: java_home

@@ -55,25 +55,4 @@
      name: httpd
      enabled: yes
     when: ansible_distribution == "CentOS"
-
-  - name: Update apt-get 
-    command: apt-get update on Debian
-    when: ansible_distribution == "Debian"
-
-  - name: Install Apache2 on Debian
-    apt:
-     name: apache2
-     state: present
-    when: ansible_distribution == "Debian"
-
-  - name: Start apache2 on Debian
-    service:
-     name: apache2
-     state: started
-    when: ansible_distribution == "Debian"
-
-  - name: Enable apache2 on Debian
-    service:
-     name: apache2
-     enabled: yes
-    when: ansible_distribution == "Debian"
+ 
