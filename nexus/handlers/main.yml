@@ -13,7 +13,7 @@
         
     - name: Enable Nexus service
       ansible.builtin.service:
-         name: "{{ nexus_service_name }}"
+         name: "nexus"
          state: started
          enabled: yes
 
