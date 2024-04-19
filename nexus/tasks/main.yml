@@ -2,6 +2,9 @@
 ### nexus intall
 # this is nexus
 
+vars:
+  nexus_version: "2.14.18"  # or whichever version you want to use
+
   - name: Download Nexus
     ansible.builtin.get_url:
       url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
