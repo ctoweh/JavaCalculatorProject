@@ -17,6 +17,18 @@
   ansible.builtin.debug:
     var: nexus_version
 
+- name: Debug Nexus Connection
+  hosts: your_nexus_servers
+  tasks:
+    - name: Ping Nexus Server
+      ansible.builtin.uri:
+        url: "http://172.31.80.82:8081/"
+        method: GET
+      register: nexus_ping
+
+    - debug:
+        var: nexus_ping
+
 - name: Create Nexus user and group
   become: yes
   user:
@@ -52,4 +64,3 @@
   ansible.builtin.service:
     name: nexus
     state: started
-
