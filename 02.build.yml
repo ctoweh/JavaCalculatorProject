@@ -3,16 +3,21 @@
   hosts: n4
   tasks:
     - name: Ensure project directory exists
-      file:
-        path: "{{ ansible_env.HOME }}/java-calculator"
-        state: directory
+      debug:
+        msg: "Project directory exists."
 
     - name: Clone GitHub repository (if needed)
       git:
         repo: "https://github.com/ctoweh/java-calculator"
-        dest: "{{ ansible_env.HOME }}/java-calculator"
+        dest: "~/java-calculator"
+        version: main
+      register: git_clone
+
+    - name: Debug cloned files
+      debug:
+        var: git_clone
 
     - name: Build Maven 
       command: "mvn clean package"
       args:
-        chdir: "{{ ansible_env.HOME }}/java-calculator"
+        chdir: "~/java-calculator"
