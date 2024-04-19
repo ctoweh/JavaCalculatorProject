@@ -16,4 +16,3 @@
       command: "mvn clean package"
       args:
         chdir: "{{ ansible_env.HOME }}/java-calculator"
-
