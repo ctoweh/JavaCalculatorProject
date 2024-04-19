@@ -15,7 +15,7 @@
         src: "{{ item.path }}"
         dest: "/tmp/"
         flat: yes
-      with_items: "{{ war_files }}"
+      with_items: "{{ warfile.files }}"  # Corrected variable name
       become: yes
 
 - name: Fetch and deploy artifacts to the deploy servers
@@ -42,10 +42,9 @@
 
     - name: Copy .war files to deploy servers
       ansible.builtin.copy:
-        src: "/tmp/{{ item | basename }}"
+        src: "/tmp/{{ item.path | basename }}"
         dest: "/opt/tomcat/webapps/"
-      with_fileglob:
-        - "/tmp/*.war"
+      with_items: "{{ warfile.files }}"  # Corrected variable name
       become: yes
 
     - name: Remove existing .war files from ansible master
