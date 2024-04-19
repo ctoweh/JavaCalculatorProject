@@ -1,5 +1,5 @@
 ---
-### nexus 
+## nexus
 
 - name: Download Nexus
   ansible.builtin.get_url:
@@ -25,6 +25,8 @@
   ansible.builtin.template:
     src: "nexus.service.j2"
     dest: "/etc/systemd/system/nexus.service"
+  vars:
+    nexus_home: "/opt/nexus"  # Define nexus_home here
   notify:
     - Reload systemd
     - Enable Nexus service
