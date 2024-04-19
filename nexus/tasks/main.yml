@@ -2,7 +2,6 @@
 ### nexus intall
 # this is nexus
 
-tasks:
   - name: Download Nexus
     ansible.builtin.get_url:
       url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
@@ -35,7 +34,7 @@ tasks:
     notify:
       - Enable Nexus service
 
-handlers:
+
   - name: Reload systemd
     ansible.builtin.systemd:
       daemon_reload: yes
