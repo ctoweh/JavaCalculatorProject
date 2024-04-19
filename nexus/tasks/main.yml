@@ -1,5 +1,5 @@
 ---
-- name: Install Nexus
+  name: Install Nexus
   hosts: n4
   vars:
     nexus_version: "2.14.18"
