@@ -5,7 +5,6 @@
   become: true
   roles:
     - role: java
-    - role: httpd
     - role: git
 
 - name: Install Tomcat on deploy hosts
