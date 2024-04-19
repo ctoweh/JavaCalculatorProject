@@ -36,8 +36,7 @@ tasks:
         state: started
       notify:
         - Enable Nexus service
-
-  handlers:
+handlers:
     - name: Reload systemd
       ansible.builtin.systemd:
         daemon_reload: yes
