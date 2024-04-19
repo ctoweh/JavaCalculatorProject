@@ -3,7 +3,7 @@
 
   - include_tasks: install.yml
 
-  - include_tasks: setjavaversion.yml
+  - include_tasks: version.yml
 
   - include_tasks: display.yml
 
