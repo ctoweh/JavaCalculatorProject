@@ -1,8 +1,6 @@
----
-- name: Install Maven
-  hosts: all
-  become: yes
-  tasks:
+#install maven 
+#
+  
     - name: Install Maven on CentOS
       yum:
         name: apache-maven
