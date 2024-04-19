@@ -13,20 +13,9 @@
         
     - name: Enable Nexus service
       ansible.builtin.service:
-         name: "nexus"
+         name: nexus
          state: started
          enabled: yes
 
-    - name: Ensure nexus_service_name is defined as a dictionary with required keys
-      assert:
-      that:
-        - nexus_service_name is defined
-        - nexus_service_name | type_debug == "dict"
-        - "name" in nexus_service_name
-        - "state" in nexus_service_name
-        - "enabled" in nexus_service_name
-      fail_msg: "nexus_service_name must be defined as a dictionary with keys 'name', 'state', and 'enabled'"
-
-
-
+    
 
