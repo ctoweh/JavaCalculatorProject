@@ -1,8 +1,4 @@
 
-    - name: Set Java 11 as the active version on CentOS
-      ansible.builtin.shell:
-        cmd: update-alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.21.0.9-1.el7_9.x86_64/bin/java
-      when: "'CentOS' in ansible_distribution"
 
     - name: Set Java 11 as the active version on Ubuntu
       ansible.builtin.shell:
