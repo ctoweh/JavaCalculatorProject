@@ -28,11 +28,15 @@
 
   - name: Configure Nexus service
     ansible.builtin.template:
-      src: "/home/centos/workspace/java-calculator/nexus/templates/nexus.service.j2"
+      src: "nexus.service.j2"
       dest: "/etc/systemd/system/nexus.service"
-      remote_src: yes
+    vars:
+      nexus_home: "/opt/nexus"
+      nexus_user: "nexus"
+      nexus_group: "nexus"
     notify:
       - Reload systemd
+
 
 
   - name: Start Nexus service
