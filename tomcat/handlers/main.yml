@@ -1,2 +1,8 @@
 ---
 # handlers file for tomcat
+
+    - name: Restart Tomcat
+      become: yes
+      systemd:
+        name: tomcat
+        state: restarted
