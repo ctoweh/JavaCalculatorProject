@@ -87,7 +87,7 @@ pipeline {
         success {
             script {
                 // Send email for successful build
-                mail to: 'towehcorina@gmail.com',
+                mail to: '',
                 subject: "Build Successful - ${currentBuild.fullDisplayName}",
                 body: "The build was successful.\n\nCheck console output at ${BUILD_URL}"
             }
@@ -95,7 +95,7 @@ pipeline {
         failure {
             script {
                 // Send email for failed build
-                mail to: 'towehcorina@gmail.com',
+                mail to: '',
                 subject: "Build Failed - ${currentBuild.fullDisplayName}",
                 body: "The build failed.\n\nCheck console output at ${BUILD_URL}"
             }
