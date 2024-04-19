@@ -1,4 +1,3 @@
----
 - name: Fetch and deploy artifacts from Nexus
   hosts: g1
   become: true
@@ -14,10 +13,22 @@
     - debug:
         var: results
 
+    - name: Get list of .war files from Nexus
+      ansible.builtin.uri:
+        url: "http://172.31.80.82:8081/service/rest/v1/search/assets"
+        method: GET
+        return_content: yes
+        body_format: json
+        headers:
+          Content-Type: "application/json"
+        status_code: 200
+      register: nexus_response
+
     - name: Fetch .war files from Nexus
       ansible.builtin.uri:
-        url: "http://n4:8081/repository/java-artifacts/{{ item.name }}"
+        url: "{{ item.downloadUrl }}"
         method: GET
         dest: "/opt/tomcat/webapps/{{ item.name }}"
-      with_items: "{{ warfile.files }}"
+      with_items: "{{ nexus_response.json.assets }}"
+      when: item.format == "war"
       become: yes
