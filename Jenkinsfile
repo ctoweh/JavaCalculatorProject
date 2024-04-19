@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Installations'
                 script {
-                    sh 'git pull /home/centos/java-calc/'
+                    sh 'git pull /home/centos/java-calculator/'
 
                     // Install all dependencies using playbook
                     ansiblePlaybook(
