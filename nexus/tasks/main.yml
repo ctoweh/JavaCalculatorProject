@@ -37,8 +37,6 @@
     notify:
       - Reload systemd
 
-
-
   - name: Start Nexus service
     ansible.builtin.service:
       name: nexus
@@ -46,12 +44,6 @@
     notify:
       - Enable Nexus service
 
-  - name: Reload systemd
-    ansible.builtin.systemd:
-      daemon_reload: yes
-      state: reloaded
 
-  - name: Enable Nexus service
-    ansible.builtin.service:
-      name: nexus
-      enabled: yes
+
+  
