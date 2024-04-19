@@ -2,56 +2,52 @@
 - name: Fetch and deploy artifacts 
   hosts: n4
   become: true
-
   tasks: 
-   - name: Find .war files on the build server
-     ansible.builtin.find:
-       paths: "/home/centos/java-calculator/target/"
-       patterns: "*.war"
-       register: warfile
+    - name: Find .war files on the build server
+      ansible.builtin.find:
+        paths: "/home/centos/java-calculator/target/"
+        patterns: "*.war"
+        register: warfile
 
-  - name: Copy .war files to ansible master
-    ansible.builtin.fetch:
-      src: "{{ item.path }}"
-      dest: "/tmp/"
-      flat: yes
-    with_items: "{{ warfile.files}}"
-    become: yes
-
+    - name: Copy .war files to ansible master
+      ansible.builtin.fetch:
+        src: "{{ item.path }}"
+        dest: "/tmp/"
+        flat: yes
+      with_items: "{{ warfile.files }}"
+      become: yes
 
 - name: Fetch and deploy artifacts to the deploy servers
   hosts: g1
   become: true
-
   tasks:
-  - name: Remove existing *.war files from webapps folder
-    ansible.builtin.shell:
-      cmd: "find /opt/tomcat/webapps/ -name '*.war' type f -delete"
-    ignore_errors: yes
-    register: results
-    become: yes
+    - name: Remove existing *.war files from webapps folder
+      ansible.builtin.shell:
+        cmd: "find /opt/tomcat/webapps/ -name '*.war' -type f -delete"
+      ignore_errors: yes
+      register: results
+      become: yes
 
-  - debug:
-     var: results
+    - debug:
+        var: results
 
-  - name: Find .war files on build server
-    ansible.builtin.find:
-      paths: "/home/centos/java-calculator/target/"
-      patterns: "*.war"
-      register: warfile
-      delegate_to: n4
+    - name: Find .war files on build server
+      ansible.builtin.find:
+        paths: "/home/centos/java-calculator/target/"
+        patterns: "*.war"
+        register: warfile
+        delegate_to: n4
 
-  - name: Copy .war files to deploy servers
-    ansible.builtin.copy:
-      src: "/tmp/{{ item | basename }}"
-      dest: "/opt/tomcat/webapps/"
-    with_fileglob:
-      - "/tmp/*.war"
-    become: yes
-    
-  - name: Remove existing .war files from ansible master
-    ansible.builtin.shell:
-      cmd: "find /tmp/ -name '*.war' -type f -delete"
-    become: yes
-    delegate_to: localhost
-...
+    - name: Copy .war files to deploy servers
+      ansible.builtin.copy:
+        src: "/tmp/{{ item | basename }}"
+        dest: "/opt/tomcat/webapps/"
+      with_fileglob:
+        - "/tmp/*.war"
+      become: yes
+
+    - name: Remove existing .war files from ansible master
+      ansible.builtin.shell:
+        cmd: "find /tmp/ -name '*.war' -type f -delete"
+      become: yes
+      delegate_to: localhost
