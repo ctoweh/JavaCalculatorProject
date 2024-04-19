@@ -2,32 +2,26 @@
 - name: Fetch and deploy artifacts 
   hosts: n4
   become: true
+
   tasks: 
     - name: Find .war files on the build server
       ansible.builtin.find:
         paths: "/home/centos/java-calculator/target/"
         patterns: "*.war"
-      register: warfile_result
-
-    - name: Set fact for .war files
-      ansible.builtin.set_fact:
-        war_files: "{{ warfile_result.files | default([]) }}"
-
-    - name: Debug .war files
-      ansible.builtin.debug:
-        var: war_files
+      register: warfile
 
     - name: Copy .war files to ansible master
       ansible.builtin.fetch:
         src: "{{ item.path }}"
         dest: "/tmp/"
         flat: yes
-      loop: "{{ war_files }}"
+      with_items: "{{ war_files }}"
       become: yes
 
 - name: Fetch and deploy artifacts to the deploy servers
   hosts: g1
   become: true
+
   tasks:
     - name: Remove existing *.war files from webapps folder
       ansible.builtin.shell:
@@ -44,12 +38,14 @@
         paths: "/home/centos/java-calculator/target/"
         patterns: "*.war"
       register: warfile
+      delegate_to: n4
 
     - name: Copy .war files to deploy servers
       ansible.builtin.copy:
         src: "/tmp/{{ item | basename }}"
         dest: "/opt/tomcat/webapps/"
-      with_items: "{{ warfile.files }}"
+      with_fileglob:
+        - "/tmp/*.war"
       become: yes
 
     - name: Remove existing .war files from ansible master
