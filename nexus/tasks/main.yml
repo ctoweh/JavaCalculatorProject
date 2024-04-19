@@ -1,6 +1,5 @@
 ---
-- hosts: your_nexus_servers
-  tasks:
+
     - name: Debug Nexus Connection
       ansible.builtin.uri:
         url: "http://172.31.80.82:8081/"
@@ -10,8 +9,7 @@
     - debug:
         var: nexus_ping
 
-- hosts: localhost
-  tasks:
+
     - name: Download Nexus
       ansible.builtin.get_url:
         url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
