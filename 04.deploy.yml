@@ -4,7 +4,7 @@
   become: true
 
   tasks:
-    - name: Find .war files on build server (n4c)
+    - name: Find .war files on Build Server 
       ansible.builtin.find:
         paths: "/home/centos/java-calculator/target/"
         patterns: "*.war"
@@ -33,7 +33,7 @@
     - debug:
         var: result
 
-    - name: Find .war files on build server
+    - name: Find .war files on Build Server
       ansible.builtin.find:
         paths: "/home/centos/java-calculator/target/"
         patterns: "*.war"
