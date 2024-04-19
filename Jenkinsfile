@@ -7,7 +7,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Installations') {
+        stage('Configurations') {
             agent { 
                 label 'ansible-master' 
             }
@@ -43,7 +43,7 @@ pipeline {
                 )
             }
         }
-        stage('Deploy to Servers') {
+        stage('Deploy') {
             agent {
                 label 'ansible-master'
             }
