@@ -1,8 +1,7 @@
 ---
-- name: Debug Nexus Connection
-  hosts: your_nexus_servers
+- hosts: your_nexus_servers
   tasks:
-    - name: Ping Nexus Server
+    - name: Debug Nexus Connection
       ansible.builtin.uri:
         url: "http://172.31.80.82:8081/"
         method: GET
@@ -11,55 +10,57 @@
     - debug:
         var: nexus_ping
 
-- name: Download Nexus
-  ansible.builtin.get_url:
-    url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
-    dest: "/tmp/nexus.tar.gz"
+- hosts: localhost
+  tasks:
+    - name: Download Nexus
+      ansible.builtin.get_url:
+        url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
+        dest: "/tmp/nexus.tar.gz"
 
-- name: Extract Nexus archive
-  ansible.builtin.unarchive:
-    src: "/tmp/nexus.tar.gz"
-    dest: "/opt/"
-    remote_src: yes
-    creates: "/opt/nexus-{{ nexus_version }}"
-  register: extraction_result
+    - name: Extract Nexus archive
+      ansible.builtin.unarchive:
+        src: "/tmp/nexus.tar.gz"
+        dest: "/opt/"
+        remote_src: yes
+        creates: "/opt/nexus-{{ nexus_version }}"
+      register: extraction_result
 
-- name: Debug Nexus version
-  ansible.builtin.debug:
-    var: nexus_version
+    - debug:
+        var: extraction_result
 
-- name: Create Nexus user and group
-  become: yes
-  user:
-    name: nexus
-    state: present
+    - name: Create Nexus user and group
+      ansible.builtin.user:
+        name: nexus
+        state: present
+        become: yes
 
-- name: Set ownership of Nexus installation directory
-  become: yes
-  file:
-    path: /opt/nexus-3.67.1-01
-    owner: nexus
-    group: nexus
-    recurse: yes
+    - name: Set ownership of Nexus installation directory
+      ansible.builtin.file:
+        path: /opt/nexus-3.67.1-01
+        owner: nexus
+        group: nexus
+        recurse: yes
+        become: yes
 
-- name: Update Nexus systemd service to run as nexus user
-  become: yes
-  replace:
-    path: /etc/systemd/system/nexus.service
-    regexp: 'User=root'
-    replace: 'User=nexus'
+    - name: Update Nexus systemd service to run as nexus user
+      ansible.builtin.replace:
+        path: /etc/systemd/system/nexus.service
+        regexp: 'User=root'
+        replace: 'User=nexus'
+        become: yes
 
-- name: Configure Nexus service
-  ansible.builtin.template:
-    src: "nexus.service.j2"
-    dest: "/etc/systemd/system/nexus.service"
-  vars:
-    nexus_home: "/opt/nexus"  # Define nexus_home here
-  notify:
-    - Reload systemd
-    - Enable Nexus service
+    - name: Configure Nexus service
+      ansible.builtin.template:
+        src: "nexus.service.j2"
+        dest: "/etc/systemd/system/nexus.service"
+        vars:
+          nexus_home: "/opt/nexus"  # Define nexus_home here
+      notify:
+        - Reload systemd
+        - Enable Nexus service
 
-- name: Start Nexus service
-  ansible.builtin.service:
-    name: nexus
-    state: started
+    - name: Start Nexus service
+      ansible.builtin.service:
+        name: nexus
+        state: started
+        become: yes
