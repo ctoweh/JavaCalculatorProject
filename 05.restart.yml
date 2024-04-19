@@ -1,0 +1,7 @@
+---
+- name: Restart Tomcat
+  hosts: g1
+  become: true
+  roles: 
+    - role: tomcat
+...

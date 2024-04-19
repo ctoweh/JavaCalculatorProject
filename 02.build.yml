@@ -1,0 +1,23 @@
+---
+- name: Build and Package with Maven 
+  hosts: n4
+  tasks:
+    - name: Ensure ~/java-calculator directory is absent
+      file: 
+        path: "~/java-calculator"
+    
+    - name: Create project directory
+      file:
+        path: "~java-calculator"
+        state: directory
+    
+    - name: Clone GitHub repository (if needed)
+      git:
+        repo: ""
+        dest: "~java-calculator"
+
+    - name: Build Maven 
+      command: "mvn clean package"
+      args:
+        chdir: "~java-calculator"
+  ...

@@ -1,2 +1,24 @@
----
-# tasks file for tomcat
+- name: Create Tomcat Directory
+  file:
+    path: /opt/tomcat
+    mode: '0755'
+    state: directory
+
+- name: Download Apache Tomcat
+  get_url:
+    url: "http://archive.apache.org/dist/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.tar.gz"
+    dest: "/tmp/"
+    validate_certs: yes
+
+- name: Extract Tomcat
+  shell: "tar -xzvf /tmp/apache-tomcat-9.0.86.tar.gz -C /opt/tomcat --strip-components=1"
+  args:
+    warn: no
+
+- name: Start Tomcat service
+  shell: "/opt/tomcat/bin/startup.sh"
+  async: 1
+  poll: 0
+  ignore_errors: yes  # Ignore errors if Tomcat is already running
+
+...
