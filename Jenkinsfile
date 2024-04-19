@@ -8,27 +8,37 @@ pipeline {
             }
         }
         stage('Installations') {
+            agent { 
+                label 'ansible-master' 
+            }
             steps {
                 echo 'Installations'
-                script {
-                    sh 'git pull /home/centos/java-calculator/'
-
-                    // Install all dependencies using playbook
-                    ansiblePlaybook(
-                        playbook: '/home/centos/java_web_app/01.install.yml',
-                        inventory: '/home/centos/java_web_app/hosts.ini'
-                    )
-                }
+                ansiblePlaybook(
+                    playbook: '01.install.yml',
+                    inventory: 'hosts.ini'
+                )
             }
         }
         stage('Build') {
-            agent {
-                label 'ansible-master'
+            agent { 
+                label 'anisble-master'
             }
             steps {
                 echo 'Building the app'
                 ansiblePlaybook(
                     playbook: '02.build.yml',
+                    inventory: 'hosts.ini'
+                )
+            }
+        }
+        stage('Test') {
+            agent {
+                label  'ansible-master'
+            }
+            steps {
+                echo 'Testing the app'
+                ansiblePlaybook(
+                    playbook: '03.test.yml',
                     inventory: 'hosts.ini'
                 )
             }
@@ -55,7 +65,7 @@ pipeline {
                     playbook: '04.war-file.yml',
                     inventory: 'hosts.ini',
                     extraVars: [
-                        warfile: "${WORKSPACE}/warfile.json" // Adjust the path accordingly
+                        warfile: "${WORKSPACE}/warfile.json" 
                     ]
                 )
             }
@@ -67,13 +77,12 @@ pipeline {
             steps {
                 echo 'Starting Tomcat'
                 ansiblePlaybook(
-                    playbook: '05.restart.yml',
+                    playbook: '05.restart',
                     inventory: 'hosts.ini'
                 )
             }
         }
     }
-
     post {
         success {
             script {
