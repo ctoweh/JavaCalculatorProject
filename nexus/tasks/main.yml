@@ -1,5 +1,3 @@
-## nexus
-
 - name: Download Nexus
   ansible.builtin.get_url:
     url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
