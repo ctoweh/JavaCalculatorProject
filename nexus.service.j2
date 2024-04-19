@@ -1,14 +1,14 @@
-
 [Unit]
 Description=Nexus Repository Manager
 
 [Service]
 Type=simple
-ExecStart={{ nexus_home }}/bin/nexus start
-ExecStop={{ nexus_home }}/bin/nexus stop
-User={{ nexus_user }}
-Group={{ nexus_group }}
+ExecStart=/opt/nexus-3.67.1-01/bin/nexus start
+ExecStop=/opt/nexus-3.67.1-01/bin/nexus stop
+User=root
+Group=root
 Restart=on-abnormal
 
 [Install]
 WantedBy=multi-user.target
+
