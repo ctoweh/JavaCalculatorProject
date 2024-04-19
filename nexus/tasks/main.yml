@@ -1,3 +1,16 @@
+---
+- name: Debug Nexus Connection
+  hosts: your_nexus_servers
+  tasks:
+    - name: Ping Nexus Server
+      ansible.builtin.uri:
+        url: "http://172.31.80.82:8081/"
+        method: GET
+      register: nexus_ping
+
+    - debug:
+        var: nexus_ping
+
 - name: Download Nexus
   ansible.builtin.get_url:
     url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
@@ -14,18 +27,6 @@
 - name: Debug Nexus version
   ansible.builtin.debug:
     var: nexus_version
-
-- name: Debug Nexus Connection
-  hosts: your_nexus_servers
-  tasks:
-    - name: Ping Nexus Server
-      ansible.builtin.uri:
-        url: "http://172.31.80.82:8081/"
-        method: GET
-      register: nexus_ping
-
-    - debug:
-        var: nexus_ping
 
 - name: Create Nexus user and group
   become: yes
