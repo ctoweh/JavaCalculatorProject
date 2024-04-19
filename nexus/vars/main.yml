@@ -1,4 +1,4 @@
 ---
 # vars file for nexus
 
-nexus_version: "2.14.18"  # or whichever version you want to use
+nexus_version: "3"  # or whichever version you want to use
