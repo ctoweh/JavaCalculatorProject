@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Build') {
             agent { 
-                label 'anisble-master'
+                label 'ansible-master'
             }
             steps {
                 echo 'Building the app'
