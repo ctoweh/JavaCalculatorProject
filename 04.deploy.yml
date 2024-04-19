@@ -7,11 +7,10 @@
       ansible.builtin.shell:
         cmd: "find /opt/tomcat/webapps/ -name '*.war' -type f -delete"
       ignore_errors: yes
-      register: results
-      become: yes
+      register: removal_result
 
     - debug:
-        var: results
+        var: removal_result
 
     - name: Get list of .war files from Nexus
       ansible.builtin.uri:
@@ -24,11 +23,17 @@
         status_code: 200
       register: nexus_response
 
+    - debug:
+        var: nexus_response
+
     - name: Fetch .war files from Nexus
       ansible.builtin.uri:
         url: "{{ item.downloadUrl }}"
         method: GET
         dest: "/opt/tomcat/webapps/{{ item.name }}"
+        # Add authentication if necessary
+        # user: your_username
+        # password: your_password
       with_items: "{{ nexus_response.json.assets }}"
       when: item.format == "war"
       become: yes
