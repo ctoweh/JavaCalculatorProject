@@ -1,6 +1,4 @@
-  name: Install HTTPD
-  hosts: g1
-  become: yes
+ ---
 
   tasks:
     - name: Install HTTPD
