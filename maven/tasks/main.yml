@@ -27,4 +27,3 @@
 
     - name: Reload shell environment
       ansible.builtin.shell: source /etc/profile
-...
