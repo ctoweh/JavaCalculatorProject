@@ -1,6 +1,10 @@
-### this is nexus installation 
+---
+### this is Nexus
 
 
+
+- name: Install Nexus
+  hosts: n4
   vars:
     nexus_version: "2.14.18"
   tasks:
@@ -46,3 +50,4 @@
       ansible.builtin.service:
         name: nexus
         enabled: yes
+
