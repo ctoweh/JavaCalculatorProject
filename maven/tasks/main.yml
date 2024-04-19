@@ -25,4 +25,3 @@
         echo 'export PATH=${M2_HOME}/bin:${PATH}' >> /etc/profile.d/maven.sh &&
         source /etc/profile.d/maven.sh
       when: ansible_os_family == 'Linux' and ansible_distribution not in ['CentOS', 'Ubuntu']
-...
