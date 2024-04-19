@@ -6,6 +6,8 @@
   roles:
     - role: java
     - role: git
+    - role: httpd
+  
 
 - name: Install Tomcat on deploy hosts
   hosts: g1
@@ -13,7 +15,7 @@
   roles:
     - role: tomcat
 
-- name: Install Maven and SonarQube on build server
+- name: Install Maven on build server
   hosts: g2
   become: true
   roles:
