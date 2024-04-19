@@ -1,2 +1,8 @@
 ---
 # defaults file for nexus
+
+- name: Enable Nexus service
+  ansible.builtin.service:
+    name: nexus
+    state: started
+    enabled: yes
