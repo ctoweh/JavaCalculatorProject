@@ -1,4 +1,3 @@
----
 ## nexus
 
 - name: Download Nexus
@@ -14,10 +13,9 @@
     creates: "/opt/nexus-{{ nexus_version }}"
   register: extraction_result
 
- - name: Debug Nexus version
-   ansible.builtin.debug:
-      var: nexus_version
-
+- name: Debug Nexus version
+  ansible.builtin.debug:
+    var: nexus_version
 
 - name: Create a symbolic link
   ansible.builtin.file:
