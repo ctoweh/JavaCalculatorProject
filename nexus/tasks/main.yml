@@ -2,8 +2,6 @@
 ### nexus intall
 # this is nexus
 
-name: install nexus
-hosts: n4
 tasks:
   - name: Download Nexus
     ansible.builtin.get_url:
