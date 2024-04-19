@@ -9,13 +9,13 @@
 
 - name: Extract Tomcat
   ansible.builtin.unarchive:
-    src: "https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.16/bin/apache-tomcat-10.1.16.tar.gz"
+    src: "https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz"
     dest: /opt/tomcat
     remote_src: yes
 
 - name: Move files to the /opt/tomcat directory
   become: yes
-  shell: "mv -un /opt/tomcat/apache-tomcat-10.1.16/* /opt/tomcat/"
+  shell: "mv -un /opt/tomcat/apache-tomcat-7.0.94/* /opt/tomcat/"
   notify:
     - Restart Tomcat
 
