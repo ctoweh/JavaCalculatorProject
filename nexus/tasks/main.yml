@@ -13,12 +13,18 @@
       dest: "/opt/"
       remote_src: yes
       creates: "/opt/nexus-{{ nexus_version }}"
+    register: extraction_result
+
+  - name: Debug extraction result
+    ansible.builtin.debug:
+      var: extraction_result
 
   - name: Create a symbolic link
     ansible.builtin.file:
       src: "/opt/nexus-{{ nexus_version }}"
       dest: "/opt/nexus"
       state: link
+    when: extraction_result.changed
 
   - name: Configure Nexus service
     ansible.builtin.template:
