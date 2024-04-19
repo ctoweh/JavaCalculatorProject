@@ -1,3 +1,4 @@
+
 - name: Set Java 11 as the active version on CentOS
   hosts: n1, n4
   become: yes
