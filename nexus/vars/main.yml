@@ -1,4 +1,7 @@
 ---
 # vars file for nexus
 
-nexus_version: "3"  # or whichever version you want to use
+nexus_version: "3.67.1-01"  # Define the appropriate Nexus version here
+nexus_user: "nexus"          # Define the Nexus user here
+nexus_group: "nexus"         # Define the Nexus group here
+
