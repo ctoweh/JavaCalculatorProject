@@ -1,0 +1,20 @@
+- name: Create Nexus user and group
+  become: yes
+  user:
+    name: nexus
+    state: present
+
+- name: Set ownership of Nexus installation directory
+  become: yes
+  file:
+    path: /opt/nexus-3.67.1-01
+    owner: nexus
+    group: nexus
+    recurse: yes
+
+- name: Update Nexus systemd service to run as nexus user
+  become: yes
+  replace:
+    path: /etc/systemd/system/nexus.service
+    regexp: 'User=root'
+    replace: 'User=nexus'
