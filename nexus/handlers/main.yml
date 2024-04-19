@@ -1,21 +1,21 @@
----
 # handlers file for nexus
 
-    - name: Reload systemd
-      ansible.builtin.systemd:
-        daemon_reload: yes
-        state: reloaded
+- name: Reload systemd
+  ansible.builtin.systemd:
+    name: nexus
+    daemon_reload: yes
+    state: reloaded
 
-    - name: Restart Nexus service
-      ansible.builtin.service:
-        name: nexus
-        state: restarted
-        
-    - name: Enable Nexus service
-      ansible.builtin.service:
-         name: nexus
-         state: started
-         enabled: yes
+- name: Restart Nexus service
+  ansible.builtin.service:
+    name: nexus
+    state: restarted
+
+- name: Enable Nexus service
+  ansible.builtin.service:
+    name: nexus
+    state: started
+    enabled: yes
 
     
 
