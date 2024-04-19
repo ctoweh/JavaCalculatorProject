@@ -7,18 +7,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Install tools') {
-            agent {
-                label 'ansible-master'
-            }
-            steps {
-                echo 'Installing the requirements'
-                ansiblePlaybook(
-                    playbook: '01.install.yml',
-                    inventory: 'hosts.ini'
-                )
-            }
-        }
         stage('Build') {
             agent {
                 label 'ansible-master'
@@ -31,24 +19,24 @@ pipeline {
                 )
             }
         }
-        stage('Test') {
-            agent {
-                label 'ansible-master'
-            }
-            steps {
-                echo 'Testing the app'
-                ansiblePlaybook(
-                    playbook: '03.test.yml',
-                    inventory: 'hosts.ini'
-                )
-            }
-        }
         stage('Deploy') {
             agent {
                 label 'ansible-master'
             }
             steps {
-                echo 'Copy .war files to the deploy servers'
+                echo 'Deploying artifacts to Nexus'
+                ansiblePlaybook(
+                    playbook: '04.war-file.yml',
+                    inventory: 'hosts.ini'
+                )
+            }
+        }
+        stage('Deploy to Servers') {
+            agent {
+                label 'ansible-master'
+            }
+            steps {
+                echo 'Deploying artifacts to the deployment servers'
                 ansiblePlaybook(
                     playbook: '04.war-file.yml',
                     inventory: 'hosts.ini'

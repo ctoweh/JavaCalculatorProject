@@ -1,24 +1,5 @@
 ---
-- name: Fetch and deploy artifacts 
-  hosts: n4
-  become: true
-
-  tasks: 
-    - name: Find .war files on the build server
-      ansible.builtin.find:
-        paths: "/home/centos/java-calculator/target/"
-        patterns: "*.war"
-      register: warfile
-
-    - name: Copy .war files to ansible master
-      ansible.builtin.fetch:
-        src: "{{ item.path }}"
-        dest: "/tmp/"
-        flat: yes
-      with_items: "{{ warfile.files }}"  # Corrected variable name
-      become: yes
-
-- name: Fetch and deploy artifacts to the deploy servers
+- name: Fetch and deploy artifacts from Nexus
   hosts: g1
   become: true
 
@@ -33,23 +14,10 @@
     - debug:
         var: results
 
-    - name: Find .war files on build server
-      ansible.builtin.find:
-        paths: "/home/centos/java-calculator/target/"
-        patterns: "*.war"
-      register: warfile
-      delegate_to: n4
-
-    - name: Copy .war files to deploy servers
-      ansible.builtin.copy:
-        src: "/tmp/{{ item.path | basename }}"
-        dest: "/opt/tomcat/webapps/"
+    - name: Fetch .war files from Nexus
+      ansible.builtin.uri:
+        url: "http://n4:8081/repository/java-artifacts/{{ item.name }}"
+        method: GET
+        dest: "/opt/tomcat/webapps/{{ item.name }}"
       with_items: "{{ warfile.files }}"
       become: yes
-
-
-    - name: Remove existing .war files from ansible master
-      ansible.builtin.shell:
-        cmd: "find /tmp/ -name '*.war' -type f -delete"
-      become: yes
-      delegate_to: localhost
