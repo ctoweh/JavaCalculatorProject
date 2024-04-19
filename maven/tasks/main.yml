@@ -1,29 +1,27 @@
 ---
-- name: Install Maven 3.9.6 on CentOS 7
-  hosts: g2
-  become: yes
-
   tasks:
-  
-    - name: Download Maven 3.9.6
-      get_url:
-        url: "https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz"
-        dest: "/tmp/apache-maven-3.9.6-bin.tar.gz"
+  - name: Update APT package manager repositories cache
+    become: true
+    apt:
+      update_cache: yes
 
-    - name: Extract Maven archive
-      ansible.builtin.unarchive:
-        src: "/tmp/apache-maven-3.9.6-bin.tar.gz"
-        dest: "/opt"
-        remote_src: yes
+  - name: Download Apache Maven
+    become: true
+    get_url: url=https://mirrors.estointernet.in/apache/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz dest=/tmp/apache-maven-3.9.6-bin.tar.gz
 
-    - name: Set up Maven environment variables
-      ansible.builtin.lineinfile:
-        dest: /etc/profile.d/maven.sh
-        line: |
-          export M2_HOME=/opt/apache-maven-3.9.6
-          export MAVEN_HOME=/opt/apache-maven-3.9.6
-          export PATH=${M2_HOME}/bin:${PATH}
-        create: yes
+  - name: Untar Maven
+    become: true 
+    shell: chdir=/tmp creates=/opt/apache-maven-3.9.6 tar -zxf apache-maven-3.9.6-bin.tar.gz -C /opt
 
-    - name: Reload shell environment
-      ansible.builtin.shell: source /etc/profile
+  - name: Set MAVEN_HOME
+    become: true
+    lineinfile:
+      dest: /etc/profile.d/maven.sh
+      create: yes
+      state: present
+      mode: '0744'
+      line: '{{ item }}'
+    with_items:
+      - 'export M2_HOME=/opt/apache-maven-3.9.6'
+      - 'export MAVEN_HOME=/opt/apache-maven-3.9.6'
+      - 'export PATH=${M2_HOME}/bin:${PATH}'
