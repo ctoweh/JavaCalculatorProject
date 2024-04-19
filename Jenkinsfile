@@ -43,30 +43,15 @@ pipeline {
                 )
             }
         }
-        stage('Deploy') {
-            agent {
-                label 'ansible-master'
-            }
-            steps {
-                echo 'Deploying artifacts to Nexus'
-                ansiblePlaybook(
-                    playbook: '04.war-file.yml',
-                    inventory: 'hosts.ini'
-                )
-            }
-        }
         stage('Deploy to Servers') {
             agent {
                 label 'ansible-master'
             }
             steps {
-                echo 'Deploying artifacts to the deployment servers'
+                echo 'Deploying artifacts to Tomcat servers'
                 ansiblePlaybook(
-                    playbook: '04.war-file.yml',
-                    inventory: 'hosts.ini',
-                    extraVars: [
-                        warfile: "${WORKSPACE}/warfile.json" 
-                    ]
+                    playbook: '04.deploy.yml',
+                    inventory: 'hosts.ini'
                 )
             }
         }
@@ -83,6 +68,7 @@ pipeline {
             }
         }
     }
+
     post {
         success {
             script {
