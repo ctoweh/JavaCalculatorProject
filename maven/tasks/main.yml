@@ -1,27 +1,30 @@
 ---
-- name: Install Maven
-  hosts: all
+- name: Install Maven 3.9.6 on CentOS 7
+  hosts: g2
   become: yes
+
   tasks:
-    - name: Install Maven on CentOS
-      yum:
-        name: apache-maven
-        state: present
-      when: ansible_os_family == 'RedHat'
+  
+    - name: Download Maven 3.9.6
+      get_url:
+        url: "https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz"
+        dest: "/tmp/apache-maven-3.9.6-bin.tar.gz"
 
-    - name: Install Maven on Ubuntu
-      apt:
-        name: maven
-        state: present
-      when: ansible_os_family == 'Debian'
+    - name: Extract Maven archive
+      ansible.builtin.unarchive:
+        src: "/tmp/apache-maven-3.9.6-bin.tar.gz"
+        dest: "/opt"
+        remote_src: yes
 
-    - name: Install Maven on other Linux distributions
-      shell: >
-        wget https://apache.mirror.digitalpacific.com.au/maven/maven-3/3.9.6/binaries/apache-ma
-        tar -xf apache-maven-3.9.6-bin.tar.gz &&
-        mv apache-maven-3.9.6 /opt &&
-        ln -s /opt/apache-maven-3.9.6 /opt/maven &&
-        echo 'export M2_HOME=/opt/maven' >> /etc/profile.d/maven.sh &&
-        echo 'export PATH=${M2_HOME}/bin:${PATH}' >> /etc/profile.d/maven.sh &&
-        source /etc/profile.d/maven.sh
-      when: ansible_os_family == 'Linux' and ansible_distribution not in ['CentOS', 'Ubuntu']
+    - name: Set up Maven environment variables
+      ansible.builtin.lineinfile:
+        dest: /etc/profile.d/maven.sh
+        line: |
+          export M2_HOME=/opt/apache-maven-3.9.6
+          export MAVEN_HOME=/opt/apache-maven-3.9.6
+          export PATH=${M2_HOME}/bin:${PATH}
+        create: yes
+
+    - name: Reload shell environment
+      ansible.builtin.shell: source /etc/profile
+...
