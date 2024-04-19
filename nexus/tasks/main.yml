@@ -1,6 +1,4 @@
 ---
-### nexus intall
-# this is nexus
 
 name: install nexus
 hosts: n4
