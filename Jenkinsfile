@@ -40,6 +40,9 @@ pipeline {
                 ansiblePlaybook(
                     playbook: '04.war-file.yml',
                     inventory: 'hosts.ini'
+                    extraVars: [
+                        warfile: "${WORKSPACE}/warfile.json" // Adjust the path accordingly
+                    ]
                 )
             }
         }
