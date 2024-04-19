@@ -7,6 +7,20 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Installations') {
+            steps {
+                echo 'Installations'
+                script {
+                    sh 'git pull /home/centos/java_web_app/'
+
+                    // Install all dependencies using playbook
+                    ansiblePlaybook(
+                        playbook: '/home/centos/java_web_app/01.install.yml',
+                        inventory: '/home/centos/java_web_app/hosts.ini'
+                    )
+                }
+            }
+        }
         stage('Build') {
             agent {
                 label 'ansible-master'
@@ -39,7 +53,7 @@ pipeline {
                 echo 'Deploying artifacts to the deployment servers'
                 ansiblePlaybook(
                     playbook: '04.war-file.yml',
-                    inventory: 'hosts.ini'
+                    inventory: 'hosts.ini',
                     extraVars: [
                         warfile: "${WORKSPACE}/warfile.json" // Adjust the path accordingly
                     ]
