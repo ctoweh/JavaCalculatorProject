@@ -1,4 +1,3 @@
-
 ---
 - name: Fetch and Deploy Artifacts to Tomcat
   hosts: g1
