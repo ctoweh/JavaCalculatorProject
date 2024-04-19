@@ -43,8 +43,7 @@
       ansible.builtin.find:
         paths: "/home/centos/java-calculator/target/"
         patterns: "*.war"
-        register: warfile
-        delegate_to: n4
+      register: warfile
 
     - name: Copy .war files to deploy servers
       ansible.builtin.copy:
