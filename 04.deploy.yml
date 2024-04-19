@@ -1,3 +1,4 @@
+
 ---
 - name: Fetch and Deploy Artifacts to Tomcat
   hosts: g1
@@ -12,9 +13,16 @@
         - "*.war"
       become: yes
 
+    - name: List WAR files on Build Server
+      ansible.builtin.shell:
+        cmd: "ls /home/centos/java-calculator/target/*.war"
+      register: war_files
+      delegate_to: n4
+
     - name: Copy WAR files from Build Server to Tomcat
       ansible.builtin.copy:
-        src: "/home/centos/java-calculator/target/*.war"
+        src: "{{ item }}"
         dest: "/opt/tomcat/webapps/"
+      with_items: "{{ war_files.stdout_lines }}"
       delegate_to: n4
       become: yes
