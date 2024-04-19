@@ -1,8 +1,6 @@
 ### this is nexus installation 
 
 
-  name: Install Nexus
-  hosts: n4
   vars:
     nexus_version: "2.14.18"
   tasks:
