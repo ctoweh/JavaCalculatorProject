@@ -1,6 +1,4 @@
 ---
-# tasks file for nexus
----
 - name: Install Nexus
   hosts: n4
   become: true
