@@ -1,4 +1,3 @@
----
 - name: Install HTTPD
   hosts: g1
   become: yes
