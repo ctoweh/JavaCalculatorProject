@@ -1,41 +1,43 @@
 ---
-- name: install httpd server 
+- name: Install Apache HTTP Server
   hosts: g1
   become: yes
-
   tasks:
-    - name: Install HTTPD on CentOS or Amazon Linux
-      dnf:
+    - name: Install Apache HTTP Server on CentOS
+      when: ansible_distribution == 'CentOS'
+      yum:
         name: httpd
         state: present
-      when: ansible_distribution == "Amazon" or ansible_distribution == "CentOS"
 
-    - name: Start Httpd on CentOS or Amazon Linux
+    - name: Start Apache and enable it to start on boot (CentOS)
+      when: ansible_distribution == 'CentOS'
       service:
         name: httpd
-        state: started  
-      when: ansible_distribution == "Amazon" or ansible_distribution == "CentOS"
-
-    - name: Enable Httpd on CentOS or Amazon Linux
-      service:
-        name: httpd
+        state: started
         enabled: yes
-      when: ansible_distribution == "Amazon" or ansible_distribution == "CentOS"
 
-    - name: Install Apache2 on Ubuntu
+    - name: Install Apache HTTP Server on Amazon Linux
+      when: ansible_distribution == 'Amazon'
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start Apache and enable it to start on boot (Amazon Linux)
+      when: ansible_distribution == 'Amazon'
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Install Apache HTTP Server on Ubuntu
+      when: ansible_distribution == 'Ubuntu'
       apt:
         name: apache2
         state: present
-      when: ansible_distribution == "Ubuntu"
 
-    - name: Start Apache2 on Ubuntu
+    - name: Start Apache and enable it to start on boot (Ubuntu)
+      when: ansible_distribution == 'Ubuntu'
       service:
         name: apache2
-        state: started 
-      when: ansible_distribution == "Ubuntu" 
-
-    - name: Enable Apache2 on Ubuntu
-      service:
-        name: apache2
+        state: started
         enabled: yes
-      when: ansible_distribution == "Ubuntu"
