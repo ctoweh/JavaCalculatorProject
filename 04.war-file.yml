@@ -25,6 +25,10 @@
       loop: "{{ war_files }}"
       become: yes
 
+    - name: Debug message before copying .war files to deploy servers
+      ansible.builtin.debug:
+        msg: "Copying .war files to deploy servers..."
+
 - name: Fetch and deploy artifacts to the deploy servers
   hosts: g1
   become: true
@@ -51,6 +55,10 @@
         dest: "/opt/tomcat/webapps/"
       with_items: "{{ warfile.files }}"
       become: yes
+
+    - name: Debug message after copying .war files to deploy servers
+      ansible.builtin.debug:
+        msg: ".war files copied to deploy servers successfully"
 
     - name: Remove existing .war files from ansible master
       ansible.builtin.shell:
