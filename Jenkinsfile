@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Installations'
                 script {
-                    sh 'git pull /home/centos/java_web_app/'
+                    sh 'git pull /home/centos/java-calc/'
 
                     // Install all dependencies using playbook
                     ansiblePlaybook(
