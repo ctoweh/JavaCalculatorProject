@@ -19,5 +19,4 @@
   become: true
   roles:
     - role: maven
-    - role: sonarqube
 ...
