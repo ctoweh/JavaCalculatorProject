@@ -2,16 +2,11 @@
 - name: Build and Package with Maven 
   hosts: n4
   tasks:
-    - name: Ensure ~/java-calculator directory is absent
-      file: 
-        path: "{{ ansible_env.HOME }}/java-calculator"
-        state: absent
-    
-    - name: Create project directory
+    - name: Ensure project directory exists
       file:
         path: "{{ ansible_env.HOME }}/java-calculator"
         state: directory
-    
+
     - name: Clone GitHub repository (if needed)
       git:
         repo: "https://github.com/ctoweh/java-calculator"
@@ -21,3 +16,4 @@
       command: "mvn clean package"
       args:
         chdir: "{{ ansible_env.HOME }}/java-calculator"
+
