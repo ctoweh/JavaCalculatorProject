@@ -2,9 +2,6 @@
 ### nexus intall
 #this is nexus
 
-- name: Install Nexus
-  hosts: n4
-  become: true
 
   tasks:
     - name: Download Nexus
