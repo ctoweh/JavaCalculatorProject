@@ -1,0 +1,10 @@
+- name: Display Java Version and Path
+  ansible.builtin.shell:
+    cmd: |
+      java -version
+      echo "Java Home: $(dirname $(dirname $(readlink -f $(which java))))"
+  register: java_info
+
+- name: Display Java Info
+  ansible.builtin.debug:
+    var: java_info.stdout_lines

@@ -1,0 +1,22 @@
+---
+# tasks file for git
+- name: Install Git on CentOS
+  yum:
+    name: git
+    state: present
+  when: "'CentOS' in ansible_distribution"
+
+- name: Install Git on Debian/Ubuntu
+  apt:
+    name: git
+    state: present
+  when: "'Debian' in ansible_distribution or 'Ubuntu' in ansible_distribution"
+
+- name: Install Git on Amazon Linux
+  dnf:
+    name: git
+    state: present
+  when: "'Amazon' in ansible_distribution"
+
+- name: Display Git version
+  command: git --version

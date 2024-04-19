@@ -1,24 +1,58 @@
-- name: Create Tomcat Directory
-  file:
-    path: /opt/tomcat
-    mode: '0755'
-    state: directory
+# deploy_tomcat_single_playbook.yml
+    - name: Gather Facts
+      ansible.builtin.setup:
 
-- name: Download Apache Tomcat
-  get_url:
-    url: "http://archive.apache.org/dist/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.tar.gz"
-    dest: "/tmp/"
-    validate_certs: yes
+    - name: Create a Directory /opt/tomcat
+      become: yes
+      file:
+        path: /opt/tomcat
+        state: directory
 
-- name: Extract Tomcat
-  shell: "tar -xzvf /tmp/apache-tomcat-9.0.86.tar.gz -C /opt/tomcat --strip-components=1"
-  args:
-    warn: no
+    - name: Extract Tomcat
+      ansible.builtin.unarchive:
+        src: "https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.16/bin/apache-tomcat-10.1.16.tar.gz"
+        dest: /opt/tomcat
+        remote_src: yes
 
-- name: Start Tomcat service
-  shell: "/opt/tomcat/bin/startup.sh"
-  async: 1
-  poll: 0
-  ignore_errors: yes  # Ignore errors if Tomcat is already running
+    - name: Move files to the /opt/tomcat directory
+      become: yes
+      shell: "mv -un /opt/tomcat/apache-tomcat-10.1.16/* /opt/tomcat/"
+      notify:
+        - Restart Tomcat
 
-...
+    - name: Install Tomcat init script
+      ansible.builtin.copy:
+        src: "/opt/tomcat/bin/catalina.sh"
+        dest: "/etc/init.d/tomcat"
+        mode: '0755'
+        remote_src: yes
+
+    - name: Creating a service file
+      become: yes
+      copy:
+        content: |
+          [Unit]
+          Description=Tomcat Service
+          Requires=network.target
+          After=network.target
+
+          [Service]
+          Type=forking
+          Environment="CATALINA_PID=/opt/tomcat/logs/tomcat.pid"
+          Environment="CATALINA_BASE=/opt/tomcat"
+          Environment="CATALINA_HOME=/opt/tomcat"
+          Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+          ExecStart=/opt/tomcat/bin/startup.sh
+          ExecStop=/opt/tomcat/bin/shutdown.sh
+          Restart=on-abnormal
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/tomcat.service
+      notify:
+        - Restart Tomcat
+
+    - name: Reload systemd
+      become: yes
+      systemd:
+        daemon-reload: yes

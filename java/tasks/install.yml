@@ -1,0 +1,31 @@
+#install Java11 across multiple OS
+
+    - name: Update package repositories on Ubuntu
+      ansible.builtin.apt:
+        update_cache: yes
+      when: "'Ubuntu' in ansible_distribution"
+
+    - name: Install EPEL repository on CentOS
+      ansible.builtin.yum:
+        name: epel-release
+        state: present
+      when: "'CentOS' in ansible_distribution"
+
+    - name: Install Java 11 on CentOS
+      ansible.builtin.yum:
+        name: java-11-openjdk
+        state: present
+        enablerepo: epel
+      when: "'CentOS' in ansible_distribution"
+
+    - name: Install Java 11 on Amazon Linux
+      ansible.builtin.dnf:
+        name: java-11-amazon-corretto
+        state: present
+      when: "'Amazon' in ansible_distribution"
+
+    - name: Install Java 11 on Ubuntu
+      ansible.builtin.apt:
+        name: openjdk-11-jdk
+        state: present
+      when: "'Ubuntu' in ansible_distribution"

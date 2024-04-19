@@ -1,0 +1,7 @@
+    - name: Get Maven home directory
+      command: "dirname /opt/maven/bin/mvn"
+      register: mvn_home
+
+    - name: Display Maven home directory
+      debug:
+        var: mvn_home

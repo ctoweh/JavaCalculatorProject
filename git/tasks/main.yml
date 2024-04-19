@@ -1,18 +1,3 @@
----
-- name: Install Git on Ubuntu
-  package:
-    name: git
-    state: present
-  when: ansible_os_family == 'Debian'
+- include_tasks: install.yml
 
-- name: Install Git on Amazon Linux
-  dnf:
-    name: git
-    state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'Amazon'
-
-- name: Install Git on CentOS
-  yum:
-    name: git
-    state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
+- include_tasks: version.yml

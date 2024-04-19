@@ -1,49 +1,10 @@
 ---
-- name: Install Java (Amazon Corretto) on Amazon Linux
-  dnf:
-    name: 
-      - java-11-amazon-corretto
-      - java-11-amazon-corretto-devel
-    state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'Amazon'
+# tasks file for java
 
-- name: Set JAVA_HOME environment variable on Amazon Linux
-  lineinfile:
-    dest: /etc/environment
-    line: 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk'
-    state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'Amazon'
+  - include_tasks: install.yml
 
-- name: Install Java (OpenJDK) on CentOS
-  yum:
-    name: java-11-openjdk-devel
-    state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
+  - include_tasks: setjavaversion.yml
 
-- name: Set JAVA_HOME environment variable on CentOS
-  lineinfile:
-    dest: /etc/environment
-    line: 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk'
-    state: present
-  when: ansible_os_family == 'RedHat' and ansible_distribution == 'CentOS'
+  - include_tasks: display.yml
 
-- name: Update apt-get repo and cache on Debian
-  apt:
-    update_cache: yes
-    cache_valid_time: 3600
-  when: ansible_os_family == 'Debian'
-
-- name: Install Java (OpenJDK) on Debian
-  apt:
-    name: openjdk-11-jdk
-    state: present
-  when: ansible_os_family == 'Debian'
-
-- name: Set JAVA_HOME environment variable on Debian
-  lineinfile:
-    dest: /etc/environment
-    line: 'JAVA_HOME=/usr/lib/jvm/java-17-openjdk'
-    state: present
-  when: ansible_os_family == 'Debian'
-
-...
+  - include_tasks: home.yml
