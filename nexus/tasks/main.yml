@@ -1,10 +1,11 @@
 ---
-### nexus intall
+### nexus install
 # this is nexus
 
 vars:
   nexus_version: "2.14.18"  # or whichever version you want to use
 
+tasks:
   - name: Download Nexus
     ansible.builtin.get_url:
       url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
@@ -36,7 +37,6 @@ vars:
       state: started
     notify:
       - Enable Nexus service
-
 
   - name: Reload systemd
     ansible.builtin.systemd:
