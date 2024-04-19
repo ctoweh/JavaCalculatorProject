@@ -4,57 +4,38 @@
   become: yes
 
   tasks:
-    - name: Install HTTPD
+    - name: Install HTTPD on CentOS or Amazon Linux
       dnf:
         name: httpd
         state: present
-      when: ansible_distribution == "Amazon" or ansible_distribution == "centos"
+      when: ansible_distribution == "Amazon" or ansible_distribution == "CentOS"
 
-    - name: Start Httpd
+    - name: Start Httpd on CentOS or Amazon Linux
       service:
         name: httpd
         state: started  
-      when: ansible_distribution == "Amazon" or ansible_distribution == "centos"
+      when: ansible_distribution == "Amazon" or ansible_distribution == "CentOS"
 
-    - name: Enable Httpd
+    - name: Enable Httpd on CentOS or Amazon Linux
       service:
         name: httpd
         enabled: yes
-      when: ansible_distribution == "Amazon" or ansible_distribution == "centos"
+      when: ansible_distribution == "Amazon" or ansible_distribution == "CentOS"
 
-    - name: Install Apache2
+    - name: Install Apache2 on Ubuntu
       apt:
         name: apache2
         state: present
       when: ansible_distribution == "Ubuntu"
-    - name: Start apache2
+
+    - name: Start Apache2 on Ubuntu
       service:
         name: apache2
         state: started 
       when: ansible_distribution == "Ubuntu" 
 
-    - name: Enable Apache2
+    - name: Enable Apache2 on Ubuntu
       service:
         name: apache2
         enabled: yes
       when: ansible_distribution == "Ubuntu"
-    
-    - name: Install HTTPD on CentOS
-      yum:
-        name: httpd
-        state: present
-      when: ansible_distribution == "CentOS"
-
-    - name: Start Httpd on CentOS
-      service:
-        name: httpd
-        state: started  
-      when: ansible_distribution == "CentOS"  
-
-    - name: Enable Httpd on CentOS
-      service:
-        name: httpd
-        enabled: yes
-      when: ansible_distribution == "CentOS"
-      
-...
